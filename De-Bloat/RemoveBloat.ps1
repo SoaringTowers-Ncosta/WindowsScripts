@@ -321,7 +321,6 @@ $Bloatware = @(
     "Microsoft.MixedReality.Portal"
     "Microsoft.News"
     "Microsoft.Office.Lens"
-    "Microsoft.Office.OneNote"
     "Microsoft.Office.Sway"
     "Microsoft.OneConnect"
     "Microsoft.People"
@@ -329,14 +328,12 @@ $Bloatware = @(
     "Microsoft.RemoteDesktop"
     "Microsoft.SkypeApp"
     "Microsoft.StorePurchaseApp"
-    "Microsoft.Office.Todo.List"
     "Microsoft.Whiteboard"
     "Microsoft.WindowsAlarms"
     #"Microsoft.WindowsCamera"
     "microsoft.windowscommunicationsapps"
     "Microsoft.WindowsFeedbackHub"
     "Microsoft.WindowsMaps"
-    "Microsoft.WindowsSoundRecorder"
     "Microsoft.Xbox.TCUI"
     "Microsoft.XboxApp"
     "Microsoft.XboxGameOverlay"
@@ -348,7 +345,6 @@ $Bloatware = @(
     "Microsoft.YourPhone"
     "Microsoft.XboxGamingOverlay_5.721.10202.0_neutral_~_8wekyb3d8bbwe"
     "Microsoft.GamingApp"
-    "Microsoft.Todos"
     "Microsoft.PowerAutomateDesktop"
     "SpotifyAB.SpotifyMusic"
     "Microsoft.MicrosoftJournal"
@@ -479,24 +475,6 @@ $UserSIDs = Get-ChildItem "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Pr
     If (Test-Path $Search) {
         Set-ItemProperty $Search AllowCortana -Value 0 
     }
-
-    #Disables Web Search in Start Menu
-    Write-Host "Disabling Bing Search in Start Menu"
-    $WebSearch = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
-    If (!(Test-Path $WebSearch)) {
-        New-Item $WebSearch
-    }
-    Set-ItemProperty $WebSearch DisableWebSearch -Value 1 
-    ##Loop through all user SIDs in the registry and disable Bing Search
-    foreach ($sid in $UserSIDs) {
-        $WebSearch = "Registry::HKU\$sid\SOFTWARE\Microsoft\Windows\CurrentVersion\Search"
-        If (!(Test-Path $WebSearch)) {
-            New-Item $WebSearch
-        }
-        Set-ItemProperty $WebSearch BingSearchEnabled -Value 0
-    }
-    
-    Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" BingSearchEnabled -Value 0 
 
             
     #Stops the Windows Feedback Experience from sending anonymous data
@@ -843,99 +821,99 @@ write-host "Removed"
 #                                           Windows CoPilot                                                #
 #                                                                                                          #
 ############################################################################################################
-$version = Get-CimInstance Win32_OperatingSystem | Select-Object -ExpandProperty Caption
-if ($version -like "*Windows 11*") {
-    write-host "Removing Windows Copilot"
+#$version = Get-CimInstance Win32_OperatingSystem | Select-Object -ExpandProperty Caption
+#if ($version -like "*Windows 11*") {
+#    write-host "Removing Windows Copilot"
 # Define the registry key and value
-$registryPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot"
-$propertyName = "TurnOffWindowsCopilot"
-$propertyValue = 1
+#$registryPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot"
+#$propertyName = "TurnOffWindowsCopilot"
+#$propertyValue = 1
 
 # Check if the registry key exists
-if (!(Test-Path $registryPath)) {
+#if (!(Test-Path $registryPath)) {
     # If the registry key doesn't exist, create it
-    New-Item -Path $registryPath -Force | Out-Null
-}
+#    New-Item -Path $registryPath -Force | Out-Null
+#}
 
 # Get the property value
-$currentValue = Get-ItemProperty -Path $registryPath -Name $propertyName -ErrorAction SilentlyContinue
+#$currentValue = Get-ItemProperty -Path $registryPath -Name $propertyName -ErrorAction SilentlyContinue
 
 # Check if the property exists and if its value is different from the desired value
-if ($null -eq $currentValue -or $currentValue.$propertyName -ne $propertyValue) {
+#if ($null -eq $currentValue -or $currentValue.$propertyName -ne $propertyValue) {
     # If the property doesn't exist or its value is different, set the property value
-    Set-ItemProperty -Path $registryPath -Name $propertyName -Value $propertyValue
-}
+#    Set-ItemProperty -Path $registryPath -Name $propertyName -Value $propertyValue
+#}
 
 
 ##Grab the default user as well
-$registryPath = "HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\WindowsCopilot"
-$propertyName = "TurnOffWindowsCopilot"
-$propertyValue = 1
+#$registryPath = "HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\WindowsCopilot"
+#$propertyName = "TurnOffWindowsCopilot"
+#$propertyValue = 1
 
 # Check if the registry key exists
-if (!(Test-Path $registryPath)) {
+#if (!(Test-Path $registryPath)) {
     # If the registry key doesn't exist, create it
-    New-Item -Path $registryPath -Force | Out-Null
-}
+#    New-Item -Path $registryPath -Force | Out-Null
+#}
 
 # Get the property value
-$currentValue = Get-ItemProperty -Path $registryPath -Name $propertyName -ErrorAction SilentlyContinue
+#$currentValue = Get-ItemProperty -Path $registryPath -Name $propertyName -ErrorAction SilentlyContinue
 
 # Check if the property exists and if its value is different from the desired value
-if ($null -eq $currentValue -or $currentValue.$propertyName -ne $propertyValue) {
+#if ($null -eq $currentValue -or $currentValue.$propertyName -ne $propertyValue) {
     # If the property doesn't exist or its value is different, set the property value
-    Set-ItemProperty -Path $registryPath -Name $propertyName -Value $propertyValue
-}
+#    Set-ItemProperty -Path $registryPath -Name $propertyName -Value $propertyValue
+#}
 
 
 ##Load the default hive from c:\users\Default\NTUSER.dat
-reg load HKU\temphive "c:\users\default\ntuser.dat"
-$registryPath = "registry::hku\temphive\Software\Policies\Microsoft\Windows\WindowsCopilot"
-$propertyName = "TurnOffWindowsCopilot"
-$propertyValue = 1
+#reg load HKU\temphive "c:\users\default\ntuser.dat"
+#$registryPath = "registry::hku\temphive\Software\Policies\Microsoft\Windows\WindowsCopilot"
+#$propertyName = "TurnOffWindowsCopilot"
+#$propertyValue = 1
 
 # Check if the registry key exists
-if (!(Test-Path $registryPath)) {
+#if (!(Test-Path $registryPath)) {
     # If the registry key doesn't exist, create it
-    [Microsoft.Win32.RegistryKey]$HKUCoPilot = [Microsoft.Win32.Registry]::Users.CreateSubKey("temphive\Software\Policies\Microsoft\Windows\WindowsCopilot", [Microsoft.Win32.RegistryKeyPermissionCheck]::ReadWriteSubTree)
-    $HKUCoPilot.SetValue("TurnOffWindowsCopilot", 0x1, [Microsoft.Win32.RegistryValueKind]::DWord)
-}
+#    [Microsoft.Win32.RegistryKey]$HKUCoPilot = [Microsoft.Win32.Registry]::Users.CreateSubKey("temphive\Software\Policies\Microsoft\Windows\WindowsCopilot", [Microsoft.Win32.RegistryKeyPermissionCheck]::ReadWriteSubTree)
+#    $HKUCoPilot.SetValue("TurnOffWindowsCopilot", 0x1, [Microsoft.Win32.RegistryValueKind]::DWord)
+#}
 
         
 
 
 
-    $HKUCoPilot.Flush()
-    $HKUCoPilot.Close()
-[gc]::Collect()
-[gc]::WaitForPendingFinalizers()
-reg unload HKU\temphive
+#    $HKUCoPilot.Flush()
+#    $HKUCoPilot.Close()
+#[gc]::Collect()
+#[gc]::WaitForPendingFinalizers()
+#reg unload HKU\temphive
 
 
-write-host "Removed"
+#write-host "Removed"
 
 
-foreach ($sid in $UserSIDs) {
-    $registryPath = "Registry::HKU\$sid\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot"
-    $propertyName = "TurnOffWindowsCopilot"
-    $propertyValue = 1
+#foreach ($sid in $UserSIDs) {
+#    $registryPath = "Registry::HKU\$sid\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot"
+#    $propertyName = "TurnOffWindowsCopilot"
+#    $propertyValue = 1
     
     # Check if the registry key exists
-    if (!(Test-Path $registryPath)) {
+#    if (!(Test-Path $registryPath)) {
         # If the registry key doesn't exist, create it
-        New-Item -Path $registryPath -Force | Out-Null
-    }
+#        New-Item -Path $registryPath -Force | Out-Null
+#    }
     
     # Get the property value
-    $currentValue = Get-ItemProperty -Path $registryPath -Name $propertyName -ErrorAction SilentlyContinue
+#    $currentValue = Get-ItemProperty -Path $registryPath -Name $propertyName -ErrorAction SilentlyContinue
     
     # Check if the property exists and if its value is different from the desired value
-    if ($null -eq $currentValue -or $currentValue.$propertyName -ne $propertyValue) {
+#    if ($null -eq $currentValue -or $currentValue.$propertyName -ne $propertyValue) {
         # If the property doesn't exist or its value is different, set the property value
-        Set-ItemProperty -Path $registryPath -Name $propertyName -Value $propertyValue
-    }
-}
-}
+#        Set-ItemProperty -Path $registryPath -Name $propertyName -Value $propertyValue
+#    }
+#}
+#}
 
 ############################################################################################################
 #                                             Clear Start Menu                                             #
@@ -1049,11 +1027,11 @@ Remove-Item C:\Windows\Temp\SetACL.exe -recurse
 #                                        Disable Edge Surf Game                                            #
 #                                                                                                          #
 ############################################################################################################
-$surf = "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge"
-If (!(Test-Path $surf)) {
-    New-Item $surf
-}
-New-ItemProperty -Path $surf -Name 'AllowSurfGame' -Value 0 -PropertyType DWord
+#$surf = "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge"
+#If (!(Test-Path $surf)) {
+#    New-Item $surf
+#}
+#New-ItemProperty -Path $surf -Name 'AllowSurfGame' -Value 0 -PropertyType DWord
 
 ############################################################################################################
 #                                       Grab all Uninstall Strings                                         #
@@ -1338,13 +1316,10 @@ $UninstallPrograms = @(
     "Dell Optimizer"
     "Dell Power Manager"
     "DellOptimizerUI"
-    "Dell SupportAssist OS Recovery"
-    "Dell SupportAssist"
     "Dell Optimizer Service"
         "Dell Optimizer Core"
     "DellInc.PartnerPromo"
     "DellInc.DellOptimizer"
-    "DellInc.DellCommandUpdate"
         "DellInc.DellPowerManager"
         "DellInc.DellDigitalDelivery"
         "DellInc.DellSupportAssistforPCs"
@@ -1357,18 +1332,10 @@ $UninstallPrograms = @(
     "Dell Digital Delivery"
         "Dell Peripheral Manager"
         "Dell Power Manager Service"
-    "Dell SupportAssist Remediation"
-    "SupportAssist Recovery Assistant"
-        "Dell SupportAssist OS Recovery Plugin for Dell Update"
-        "Dell SupportAssistAgent"
-        "Dell Update - SupportAssist Update Plugin"
-        "Dell Core Services"
         "Dell Pair"
         "Dell Display Manager 2.0"
         "Dell Display Manager 2.1"
         "Dell Display Manager 2.2"
-        "Dell SupportAssist Remediation"
-        "Dell Update - SupportAssist Update Plugin"
         "DellInc.PartnerPromo"
 )
 
@@ -1484,30 +1451,30 @@ ForEach ($sa in $dellSA) {
 
 
 ##Dell Dell SupportAssist Remediation
-$dellSA = Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall, HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall | Get-ItemProperty | Where-Object { $_.DisplayName -match "Dell SupportAssist Remediation" } | Select-Object -Property QuietUninstallString
+#$dellSA = Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall, HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall | Get-ItemProperty | Where-Object { $_.DisplayName -match "Dell SupportAssist Remediation" } | Select-Object -Property QuietUninstallString
  
-ForEach ($sa in $dellSA) {
-    If ($sa.QuietUninstallString) {
-        try {
-            cmd.exe /c $sa.QuietUninstallString
-            }
-            catch {
-                Write-Warning "Failed to uninstall Dell Support Assist Remediation"
-            }    }
-}
+#ForEach ($sa in $dellSA) {
+#    If ($sa.QuietUninstallString) {
+#        try {
+#            cmd.exe /c $sa.QuietUninstallString
+#            }
+#            catch {
+#                Write-Warning "Failed to uninstall Dell Support Assist Remediation"
+#            }    }
+#}
 
 ##Dell Dell SupportAssist OS Recovery Plugin for Dell Update
-$dellSA = Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall, HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall | Get-ItemProperty | Where-Object { $_.DisplayName -match "Dell SupportAssist OS Recovery Plugin for Dell Update" } | Select-Object -Property QuietUninstallString
+#$dellSA = Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall, HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall | Get-ItemProperty | Where-Object { $_.DisplayName -match "Dell SupportAssist OS Recovery Plugin for Dell Update" } | Select-Object -Property QuietUninstallString
  
-ForEach ($sa in $dellSA) {
-    If ($sa.QuietUninstallString) {
-        try {
-            cmd.exe /c $sa.QuietUninstallString
-            }
-            catch {
-                Write-Warning "Failed to uninstall Dell Support Assist Remediation"
-            }    }
-}
+#ForEach ($sa in $dellSA) {
+#    If ($sa.QuietUninstallString) {
+#        try {
+#            cmd.exe /c $sa.QuietUninstallString
+#            }
+#            catch {
+#                Write-Warning "Failed to uninstall Dell Support Assist Remediation"
+ #           }    }
+#}
 
 
 
